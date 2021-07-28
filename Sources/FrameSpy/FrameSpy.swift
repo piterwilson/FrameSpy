@@ -85,23 +85,23 @@ import SwiftUI
 /// A data structure to collect "spied" frames. It's just a `typealias` for `[String: CGRect]`.
 public typealias SpiedFramesBag = [String: CGRect]
 
-struct FrameSpyPreferenceData: Equatable {
+public struct FrameSpyPreferenceData: Equatable {
     let identifier: String
     let rect: CGRect
 }
 
-struct FrameSpyPreferenceKey: PreferenceKey {
-    typealias Value = [FrameSpyPreferenceData]
-    static var defaultValue: [FrameSpyPreferenceData] = []
-    static func reduce(value: inout [FrameSpyPreferenceData], nextValue: () -> [FrameSpyPreferenceData]) {
+public struct FrameSpyPreferenceKey: PreferenceKey {
+    public typealias Value = [FrameSpyPreferenceData]
+    public static var defaultValue: [FrameSpyPreferenceData] = []
+    public static func reduce(value: inout [FrameSpyPreferenceData], nextValue: () -> [FrameSpyPreferenceData]) {
         value.append(contentsOf: nextValue())
     }
 }
 
-struct FrameSpyPreferenceView: View {
-    let identifier: String
-    let coordindateSpaceName: String
-    var body: some View {
+public struct FrameSpyPreferenceView: View {
+    public let identifier: String
+    public let coordindateSpaceName: String
+    public var body: some View {
         GeometryReader { geometry in
             Rectangle()
                 .fill(Color.clear)
@@ -111,9 +111,12 @@ struct FrameSpyPreferenceView: View {
     }
 }
 
-struct SpiedFramesCollector: ViewModifier {
-    @Binding var bag: SpiedFramesBag
-    func body(content: Content) -> some View {
+public struct SpiedFramesCollector: ViewModifier {
+    @Binding private var bag: SpiedFramesBag
+    public init(bag: Binding<SpiedFramesBag>) {
+        self._bag = bag
+    }
+    public func body(content: Content) -> some View {
         content
             .onPreferenceChange(FrameSpyPreferenceKey.self) { preference in
                 preference.forEach { p in
@@ -132,7 +135,7 @@ public struct SpiedFrameCollector: ViewModifier {
     }
 }
 
-extension View {
+public extension View {
     /**
     "Spies" the value of the `View`'s frame (a `CGRect` describing position and size) relative to a coordinate space named using `.coordinateSpace(name:)`.
      
